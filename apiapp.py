@@ -3,18 +3,7 @@ from flask import Flask, jsonify
 app = Flask(__name__)
 
 
-schema = [
-    # {
-    #     'id': 'ínteger',
-    #     'nom': 'string',
-    #     'prenom': 'string', 
-    #     'date_naissance': 'date'
-    # }
-]
-
-@app.route('/test/api/v1.0/schema', methods=['GET'])
-def get_schema():
-    return jsonify({'schema': schema})
+# curl -i -H "Content-Type: application/json" -X POST -d '{"id":"integer", "nom":"string", "prenom":"string", "date_naissance":"date"}' http://localhost:5000/test/api/v1.0/schema
 
 from flask import request
 @app.route('/test/api/v1.0/schema', methods=['POST'])
@@ -30,6 +19,18 @@ def create_schema():
     schema.append(sc)
     return jsonify({'schema': schema}), 201
 
+# curl -i -H "Content-Type: application/json" -X POST -d '{"nom":"Personne", "prenom":"Inconnue", "date_naissance":"9999-12-31"}' http://localhost:5000/test/api/v1.0/upload_dataset
+@app.route('/test/api/v1.0/upload_dataset', methods=['POST'])
+def upload_dataset():
+    if not request.json:
+        abort(400)
+
+    dataset = {
+        'nom': request.json['nom'],
+        'prenom': request.json.get('prenom', ""),
+        'date_naissance': request.json['date_naissance']
+    }
+    return jsonify({'dataset': dataset}), 201
 
 
 from flask import make_response
