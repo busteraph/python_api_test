@@ -30,5 +30,13 @@ def create_schema():
     schema.append(sc)
     return jsonify({'schema': schema}), 201
 
+
+
+from flask import make_response
+
+@app.errorhandler(404)
+def not_found(error):
+    return make_response(jsonify({'error': 'Not found'}), 404)
+
 if __name__ == '__main__':
     app.run(debug=True)
