@@ -1,8 +1,7 @@
 #!flask/bin/python
 from flask import Flask, jsonify
 app = Flask(__name__)
-
-
+from flask import abort
 # curl -i -H "Content-Type: application/json" -X POST -d '{"id":"integer", "nom":"string", "prenom":"string", "date_naissance":"date"}' http://localhost:5000/test/api/v1.0/schema
 
 from flask import request
@@ -22,7 +21,7 @@ def create_schema():
 # curl -i -H "Content-Type: application/json" -X POST -d '{"nom":"Personne", "prenom":"Inconnue", "date_naissance":"9999-12-31"}' http://localhost:5000/test/api/v1.0/upload_dataset
 @app.route('/test/api/v1.0/upload_dataset', methods=['POST'])
 def upload_dataset():
-    if not request.json:
+    if not request.json or not 'nom' or not 'prenom' or not 'date_naissance' in request.json:
         abort(400)
 
     dataset = {
@@ -31,6 +30,7 @@ def upload_dataset():
         'date_naissance': request.json['date_naissance']
     }
     return jsonify({'dataset': dataset}), 201
+
 
 
 from flask import make_response
